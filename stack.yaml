@@ -1,0 +1,4 @@
+packages:
+- './bootstrap-types'
+- './yesod-elements'
+resolver: lts-7.8
