@@ -9,6 +9,10 @@ module Bootstrap.V3
   , Columns(..)
   , Flow(..)
   , Panel(..)
+  , NavbarTheme(..)
+  , NavbarPosition(..)
+  , NavbarItem(..)
+  , NavbarDropdownItem(..)
   , contextClass
   , sizeClass
   , columnsClass
@@ -19,7 +23,34 @@ module Bootstrap.V3
 import Data.Text (Text)
 import qualified Data.Text as Text
 
-data Context = Success | Info | Warning | Danger | Default | Primary | Link | Error
+data NavbarTheme
+  = NavbarThemeDefault
+  | NavbarThemeInverse
+  | NavbarThemeOther Text
+
+data NavbarPosition
+  = NavbarPositionStandard
+  | NavbarPositionStatic
+  | NavbarPositionFixed
+
+data NavbarItem r c
+  = NavbarItemLink r c
+  | NavbarItemDropdown c [NavbarDropdownItem r c]
+
+data NavbarDropdownItem r c
+  = NavbarDropdownItemLink r c
+  | NavbarDropdownItemHeader c
+  | NavbarDropdownItemSeparator
+
+data Context
+  = Success
+  | Info
+  | Warning
+  | Danger
+  | Default
+  | Primary
+  | Link
+  | Error
 
 data Size = ExtraSmall | Small | Medium | Large
   deriving (Eq,Ord)

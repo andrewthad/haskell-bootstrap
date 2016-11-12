@@ -23,123 +23,6 @@ import Text.Julius (rawJS)
 basicPanel :: Text -> WidgetT site IO () -> Panel site
 basicPanel t c = Panel (tw t) c Default
 
-div_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-div_ attrs inner = [whamlet|<div *{mkStrAttrs attrs}>^{inner}|]
-
-span_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-span_ attrs inner = [whamlet|<span *{mkStrAttrs attrs}>^{inner}|]
-
-strong_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-strong_ attrs inner = [whamlet|$newline never
-<strong *{mkStrAttrs attrs}>^{inner}|]
-
-em_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-em_ attrs inner = [whamlet|$newline never
-<em *{mkStrAttrs attrs}>^{inner}|]
-
-s_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-s_ attrs inner = [whamlet|<s *{mkStrAttrs attrs}>^{inner}|]
-
-nav_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-nav_ attrs inner = [whamlet|<nav *{mkStrAttrs attrs}>^{inner}|]
-
-form_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-form_ attrs inner = [whamlet|<form *{mkStrAttrs attrs}>^{inner}|]
-
-script_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-script_ attrs inner = [whamlet|<script *{mkStrAttrs attrs}>^{inner}|]
-
-label_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-label_ attrs inner = [whamlet|<label *{mkStrAttrs attrs}>^{inner}|]
-
-pre_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-pre_ attrs inner = [whamlet|<pre *{mkStrAttrs attrs}>^{inner}|]
-
-code_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-code_ attrs inner = [whamlet|<code *{mkStrAttrs attrs}>^{inner}|]
-
-input_ :: [(Text,Text)] -> WidgetT site IO ()
-input_ attrs = [whamlet|<input *{mkStrAttrs attrs}>|]
-
-hr_ :: [(Text,Text)] -> WidgetT site IO ()
-hr_ attrs = [whamlet|<hr *{mkStrAttrs attrs}>|]
-
-br_ :: [(Text,Text)] -> WidgetT site IO ()
-br_ attrs = [whamlet|<br *{mkStrAttrs attrs}>|]
-
-img_ :: [(Text,Text)] -> WidgetT site IO ()
-img_ attrs = [whamlet|<img *{mkStrAttrs attrs}>|]
-
-textarea_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-textarea_ attrs inner = [whamlet|<textarea *{mkStrAttrs attrs}>^{inner}|]
-
-td_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-td_ attrs inner = [whamlet|<td *{mkStrAttrs attrs}>^{inner}|]
-
-th_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-th_ attrs inner = [whamlet|<th *{mkStrAttrs attrs}>^{inner}|]
-
-table_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-table_ attrs inner = [whamlet|<table *{mkStrAttrs attrs}>^{inner}|]
-
-tbody_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-tbody_ attrs inner = [whamlet|<tbody *{mkStrAttrs attrs}>^{inner}|]
-
-thead_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-thead_ attrs inner = [whamlet|<thead *{mkStrAttrs attrs}>^{inner}|]
-
-tr_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-tr_ attrs inner = [whamlet|<tr *{mkStrAttrs attrs}>^{inner}|]
-
-h1_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-h1_ attrs inner = [whamlet|<h1 *{mkStrAttrs attrs}>^{inner}|]
-
-h2_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-h2_ attrs inner = [whamlet|<h2 *{mkStrAttrs attrs}>^{inner}|]
-
-h3_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-h3_ attrs inner = [whamlet|<h3 *{mkStrAttrs attrs}>^{inner}|]
-
-h4_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-h4_ attrs inner = [whamlet|<h4 *{mkStrAttrs attrs}>^{inner}|]
-
-h5_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-h5_ attrs inner = [whamlet|<h5 *{mkStrAttrs attrs}>^{inner}|]
-
-h6_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-h6_ attrs inner = [whamlet|<h6 *{mkStrAttrs attrs}>^{inner}|]
-
-p_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-p_ attrs inner = [whamlet|<p *{mkStrAttrs attrs}>^{inner}|]
-
-ul_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-ul_ attrs inner = [whamlet|<ul *{mkStrAttrs attrs}>^{inner}|]
-
-ol_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-ol_ attrs inner = [whamlet|<ol *{mkStrAttrs attrs}>^{inner}|]
-
-li_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-li_ attrs inner = [whamlet|<li *{mkStrAttrs attrs}>^{inner}|]
-
-blockquote_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-blockquote_ attrs inner = [whamlet|<blockquote *{mkStrAttrs attrs}>^{inner}|]
-
-small_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-small_ attrs inner = [whamlet|<small *{mkStrAttrs attrs}>^{inner}|]
-
-i_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-i_ attrs inner = [whamlet|<i *{mkStrAttrs attrs}>^{inner}|]
-
-a_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-a_ attrs inner = [whamlet|$newline never
-<a *{mkStrAttrs attrs}>^{inner}|]
-
-audio_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-audio_ attrs inner = [whamlet|<audio *{mkStrAttrs attrs}>^{inner}|]
-
-source_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-source_ attrs inner = [whamlet|<source *{mkStrAttrs attrs}>^{inner}|]
-
 anchor :: Route site -> WidgetT site IO () -> WidgetT site IO ()
 anchor route inner = [whamlet|<a href="@{route}">^{inner}|]
 
@@ -155,12 +38,6 @@ anchorPhone phone = [whamlet|<a href="tel:#{cleanedPhone}">#{phone}|]
     Just (c,cs) -> if c == '+'
       then strippedPhone
       else Text.append "+1" strippedPhone
-
-button_ :: [(Text,Text)] -> WidgetT site IO () -> WidgetT site IO ()
-button_ attrs inner = [whamlet|<button *{mkStrAttrs attrs}>^{inner}|]
-
-mkStrAttrs :: [(Text,Text)] -> [(String,String)]
-mkStrAttrs = map $ \(a,b) -> (Text.unpack a, Text.unpack b)
 
 row :: WidgetT site IO () -> WidgetT site IO ()
 row = div_ [("class","row")]
@@ -319,36 +196,6 @@ textSubmitGroupGetForm route ctx size name placeholder value buttonContent butto
         , span_ [("class","input-group-btn")] $ do
             button_ [("class","btn btn-" <> contextName ctx)] buttonContent
         ]
-
-
-colSizeShortName :: Size -> Text
-colSizeShortName s = case s of
-  ExtraSmall -> "xs"
-  Small -> "sm"
-  Medium -> "md"
-  Large -> "lg"
-
-contextName :: Context -> Text
-contextName c = case c of
-  Success -> "success"
-  Info -> "info"
-  Warning -> "warning"
-  Default -> "default"
-  Primary -> "primary"
-  Link -> "link"
-  Error -> "error"
-  Danger -> "danger"
-
-data NavbarTheme = NavbarDefault | NavbarInverse | NavbarOtherTheme Text
-data NavbarPosition = NavbarStandard | NavbarStaticTop | NavbarFixedTop
-data NavbarItem site
-  = NavbarLink (Route site) (WidgetT site IO ())
-  | NavbarDropdown (WidgetT site IO ()) [NavbarDropdownItem site]
-
-data NavbarDropdownItem site
-  = NavbarDropdownLink (Route site) (WidgetT site IO ())
-  | NavbarDropdownHeader (WidgetT site IO ())
-  | NavbarDropdownSeparator
 
 navbar ::
      NavbarTheme
