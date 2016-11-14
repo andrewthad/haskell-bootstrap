@@ -6,7 +6,7 @@
 module Bootstrap.V3
   ( Context(..)
   , Size(..)
-  , Columns(..)
+  , Column(..)
   , Flow(..)
   , Panel(..)
   , NavbarTheme(..)
@@ -15,12 +15,16 @@ module Bootstrap.V3
   , NavbarDropdownItem(..)
   , contextClass
   , sizeClass
-  , columnsClass
-  , emptyColumns
-  , singletonColumns
+  , columnClass
+  , buttonClass
+  , navbarThemeClass
+  , navbarPositionClass
+  , emptyColumn
+  , singletonColumn
   ) where
 
 import Data.Text (Text)
+import Data.Monoid
 import qualified Data.Text as Text
 
 data NavbarTheme
@@ -55,7 +59,7 @@ data Context
 data Size = ExtraSmall | Small | Medium | Large
   deriving (Eq,Ord)
 
-data Columns = Columns
+data Column = Column
   { columnsExtraSmall :: !Int
   , columnsSmall :: !Int
   , columnsMedium :: !Int
@@ -88,25 +92,45 @@ sizeClass x = case x of
   Medium -> "md"
   Large -> "lg"
 
-columnsClass :: Columns -> Text
-columnsClass (Columns xs sm md lg) = Text.concat
+columnClass :: Column -> Text
+columnClass (Column xs sm md lg) = Text.concat
   [ "col-xs-",Text.pack (show xs)
   , " col-sm-",Text.pack (show sm)
   , " col-md-",Text.pack (show md)
   , " col-lg-",Text.pack (show lg)
   ]
 
-emptyColumns :: Columns
-emptyColumns = Columns 12 12 12 12
+emptyColumn :: Column
+emptyColumn = Column 12 12 12 12
 
-singletonColumns :: Size -> Int -> Columns
-singletonColumns sz i = Columns
+singletonColumn :: Size -> Int -> Column
+singletonColumn sz i = Column
   (if sz >= ExtraSmall then i else 12)
   (if sz >= Small then i else 12)
   (if sz >= Medium then i else 12)
   (if sz >= Large then i else 12)
 
--- setColumns :: Size -> Int -> Columns -> Columns
--- setColumns sz i (Columns xs sm md lg) = Columns
+buttonClass :: Context -> Size -> Text
+buttonClass ctx size = Text.concat
+  [ "btn btn-"
+  , contextClass ctx
+  , " btn-"
+  , sizeClass size
+  ]
+
+navbarThemeClass :: NavbarTheme -> Text
+navbarThemeClass x = case x of
+  NavbarThemeDefault -> "navbar-default"
+  NavbarThemeInverse -> "navbar-inverse"
+  NavbarThemeOther t -> "navbar-" <> t
+
+navbarPositionClass :: NavbarPosition -> Text
+navbarPositionClass x = case x of
+  NavbarPositionStandard -> ""
+  NavbarPositionStatic -> "navbar-static-top"
+  NavbarPositionFixed -> "navbar-fixed-top"
+
+-- setColumns :: Size -> Int -> Column -> Column
+-- setColumns sz i (Column xs sm md lg) = Column
 
 

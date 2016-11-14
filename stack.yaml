@@ -1,4 +1,6 @@
 packages:
 - './bootstrap-types'
-- './yesod-elements'
+- './yesod-bootstrap'
+extra-deps:
+- 'yesod-elements-1.0'
 resolver: lts-7.8
