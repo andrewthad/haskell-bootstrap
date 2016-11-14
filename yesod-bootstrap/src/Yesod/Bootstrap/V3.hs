@@ -15,6 +15,9 @@ import qualified Text.Blaze.Html5.Attributes as HA
 import qualified Bootstrap.V3 as B
 import qualified Data.Text as Text
 
+container :: Monad m => WidgetT site m a -> WidgetT site m a
+container = div_ [class_ "container"]
+
 row :: Monad m => WidgetT site m a -> WidgetT site m a
 row = div_ [class_ "row"]
 
@@ -24,6 +27,18 @@ column c = div_ [class_ (toValue (B.columnClass c))]
 button :: Monad m => B.Context -> B.Size -> WidgetT site m a -> WidgetT site m a
 button ctx size = button_
   [ class_ $ toValue $ B.buttonClass ctx size ]
+
+formButtonPost :: B.Context -> B.Size -> Route site -> WidgetT site IO a -> WidgetT site IO a
+formButtonPost = formButton "POST"
+
+formButtonGet :: B.Context -> B.Size -> Route site -> WidgetT site IO a -> WidgetT site IO a
+formButtonGet = formButton "GET"
+
+formButton :: H.AttributeValue -> B.Context -> B.Size -> Route site -> WidgetT site IO a -> WidgetT site IO a
+formButton method ctx size route inner = do
+  urlRender <- getUrlRender
+  form_ [method_ method, action_ (toValue (urlRender route))] $ do
+    button ctx size inner
 
 glyphicon :: Monad m => Text -> WidgetT site m ()
 glyphicon s = span_ [class_ $ toValue $ "glyphicon glyphicon-" <> s] mempty
