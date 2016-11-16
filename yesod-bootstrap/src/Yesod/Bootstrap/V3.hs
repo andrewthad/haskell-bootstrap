@@ -10,6 +10,7 @@ import Data.Monoid
 import Control.Monad
 import Data.Foldable (Foldable(fold))
 import Data.Functor.Identity (Identity(..))
+import qualified Data.List as List
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as HA
 import qualified Bootstrap.V3 as B
@@ -118,4 +119,11 @@ navbarDropdownItem item = do
     B.NavbarDropdownItemLink route name -> li_ [] $ anchor [] route name
     B.NavbarDropdownItemHeader name -> li_ [class_ "dropdown-header"] name
     B.NavbarDropdownItemSeparator -> li_ [class_ "separator", H.customAttribute "role" "divider"] mempty
+
+breadcrumbsList :: [(Route site,WidgetT site IO ())] -> WidgetT site IO ()
+breadcrumbsList allCrumbs = case List.reverse allCrumbs of
+  (_,lastCrumbWidget):crumbs -> ol_ [class_ "breadcrumb"] $ do
+    forM_ (List.reverse crumbs) $ \(route,name) -> li_ [] $ anchor [] route name
+    li_ [class_ "active"] lastCrumbWidget
+  [] -> mempty
 
