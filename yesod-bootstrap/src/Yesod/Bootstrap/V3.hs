@@ -44,6 +44,9 @@ formButton method ctx size route inner = do
 glyphicon :: Monad m => Text -> WidgetT site m ()
 glyphicon s = span_ [class_ $ toValue $ "glyphicon glyphicon-" <> s] mempty
 
+label :: B.Context -> WidgetT site IO () -> WidgetT site IO ()
+label ctx = span_ [class_ $ toValue $ "label label-" <> B.contextClass ctx]
+
 alert :: B.Context -> WidgetT site IO () -> WidgetT site IO ()
 alert ctx = div_ [class_ $ toValue $ "alert alert-" <> B.contextClass ctx]
 
