@@ -1,4 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE QuasiQuotes #-}
 
 module Yesod.Bootstrap.V3 where
 
@@ -10,6 +12,7 @@ import Data.Monoid
 import Control.Monad
 import Data.Foldable (Foldable(fold))
 import Data.Functor.Identity (Identity(..))
+import Text.Julius (rawJS)
 import qualified Data.List as List
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as HA
@@ -130,3 +133,43 @@ breadcrumbsList allCrumbs = case List.reverse allCrumbs of
     li_ [class_ "active"] lastCrumbWidget
   [] -> mempty
 
+popoverClickable ::
+     WidgetT site IO () -- ^ Title
+  -> WidgetT site IO () -- ^ Popup
+  -> WidgetT site IO () -- ^ Inner Content
+  -> WidgetT site IO ()
+popoverClickable title popup inner = do
+  containerId <- newIdent
+  innerId <- newIdent
+  popupWrapId <- newIdent
+  titleWrapId <- newIdent
+  span_ [id_ $ toValue containerId] $ do
+    a_ [href_ "javascript://", id_ $ toValue innerId] inner
+    div_ [id_ $ toValue popupWrapId, style_' "display:none;"] $ do
+      popup
+    div_ [id_ $ toValue titleWrapId, style_' "display:none;"] $ do
+      title
+  toWidget [julius|
+$().ready(function(){
+  $('##{rawJS innerId}').popover(
+    { html: true
+    , trigger: 'manual'
+    , content: function() { return $('##{rawJS popupWrapId}').html(); }
+    , title: function() { return $('##{rawJS titleWrapId}').html(); }
+    }
+  );
+  var hidePopover#{rawJS innerId} = function () {
+    $('##{rawJS innerId}').popover('hide');
+    $(document).off("click keypress", hidePopover#{rawJS innerId} );
+  };
+  $('##{rawJS innerId}').focusin(function() {
+      $('##{rawJS innerId}').popover('show');
+    });
+  $('##{rawJS innerId}').on("shown.bs.popover", function() {
+      $('##{rawJS containerId}').find(".popover").on("click keypress", function(e) {
+          e.stopPropagation();
+        });
+      $(document).on("click keypress", hidePopover#{rawJS innerId});
+    });
+});
+|]
