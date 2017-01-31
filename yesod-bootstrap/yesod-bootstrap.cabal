@@ -4,6 +4,7 @@ synopsis:            Bootstrap widgets for yesod
 description:         Lots of bootstrap widgets for yesod
 license:             MIT
 license-file:        LICENSE
+homepage:            https://github.com/andrewthad/haskell-bootstrap
 author:              Andrew Martin
 maintainer:          andrew.thaddeus@gmail.com
 copyright:           Andrew Martin 2016
