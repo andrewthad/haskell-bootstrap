@@ -16,6 +16,8 @@ module Bootstrap.V3
   , CarouselItem(..)
   , CarouselIndicators(..)
   , CarouselControls(..)
+  , ToggleTab(..)
+  , ToggleStyle(..)
   , contextClass
   , sizeClass
   , columnClass
@@ -90,6 +92,13 @@ data CarouselIndicators = CarouselIndicatorsOn | CarouselIndicatorsOff
 data CarouselControls = CarouselControlsOn | CarouselControlsOff
   deriving (Eq)
 
+data ToggleTab c
+  = ToggleSection Text c
+  | ToggleDropdown Text [(Text,c)]
+
+data ToggleStyle
+  = ToggleStyleTab
+  | ToggleStylePill
 
 contextClass :: Context -> Text
 contextClass x = case x of

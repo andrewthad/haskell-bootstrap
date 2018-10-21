@@ -14,6 +14,7 @@ import Data.Foldable (Foldable(fold))
 import Data.Functor.Identity (Identity(..))
 import Text.Julius (rawJS)
 import Data.Foldable (for_)
+import Control.Monad.Trans.Writer.Strict (tell,execWriterT)
 import qualified Data.List as List
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as HA
@@ -263,4 +264,33 @@ carousel indicators controls items = if length items == 0 then mempty else do
     render <- getUrlRender
     a_ [href_ (toValue route),style_' "position:absolute;left:0;right:0;width:100%;height:100%;"] w
 
+badge :: WidgetT site IO () -> WidgetT site IO ()
+badge = span_ [class_ "badge"]
 
+listGroupLinked :: [(Route site,WidgetT site IO ())] -> WidgetT site IO ()
+listGroupLinked items = do
+  render <- getUrlRender
+  div_ [class_ "list-group"] $ forM_ items $ \(route,name) -> do
+    a_ [href_ (toValue (render route)),class_ "list-group-item"] name
+
+togglableTabs :: B.ToggleStyle -> [B.ToggleTab (WidgetT site IO ())] -> WidgetT site IO ()
+togglableTabs s tabs = do
+  (nav,bodies) <- execWriterT $ forM_ (zip [1..] tabs) $ \(i,tab) -> case tab of
+    B.ToggleSection title body -> do -- WriterT (Widget,Widget) over a WidgetT
+      theId <- lift newIdent
+      let tabAAttrs = [H.customAttribute "role" "tab",href_ $ toValue $ "#" <> theId,H.dataAttribute "toggle" "tab"]
+          tabLiAttrs = (if isFirst then [class_ "active"] else []) ++ [H.customAttribute "role" "presentation"]
+          paneClasses = [class_ $ toValue $ "tab-pane " <> if isFirst then "active" else Text.empty,H.customAttribute "role" "tabpanel",id_ (toValue theId)]
+          isFirst = (i == (1 :: Int))
+      tellFst $ li_ tabLiAttrs $ a_ tabAAttrs $ toWidget title
+      tellSnd $ div_ paneClasses body
+    _ -> error "togglableTabs: figure this out"
+  div_ [] $ do
+    let styleText = case s of
+          B.ToggleStyleTab -> "nav-tabs"
+          B.ToggleStylePill -> "nav-pills"
+    ul_ [class_ $ toValue $ "nav " <> (styleText :: Text),H.customAttribute "role" "tablist"] nav
+    div_ [class_ "tab-content"] bodies
+  where
+  tellFst a = tell (a,mempty)
+  tellSnd b = tell (mempty,b)
