@@ -44,6 +44,9 @@ formButton method ctx size route inner = do
   form_ [method_ method, action_ (toValue (urlRender route))] $ do
     button ctx size inner
 
+checkbox :: WidgetT site IO () -> WidgetT site IO ()
+checkbox = div_ [class_ "checkbox"]
+
 glyphicon :: Monad m => Text -> WidgetT site m ()
 glyphicon s = span_ [class_ $ toValue $ "glyphicon glyphicon-" <> s] mempty
 
