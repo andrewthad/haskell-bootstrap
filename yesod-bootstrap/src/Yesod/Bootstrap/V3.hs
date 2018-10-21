@@ -28,6 +28,22 @@ panel (B.Panel title content ctx) = do
     div_ [class_ "panel-body"] $ do
       content
 
+panelAccordion :: [B.Panel (WidgetT site IO ())] -> WidgetT site IO ()
+panelAccordion tcs = do
+  groupId <- newIdent
+  div_ [class_ "panel-group",id_ (toValue $ groupId),H.customAttribute "role" "tablist"] $ do
+    forM_ (zip [1..] tcs) $ \(i,B.Panel title content ctx) -> do
+      headingId <- newIdent
+      panelId <- newIdent
+      div_ [class_ (toValue $ "panel panel-" <> B.contextClass ctx)] $ do
+        div_ [class_  "panel-heading",H.customAttribute "role" "tab",id_ (toValue headingId)] $ do
+          h4_ [class_ "panel-title"] $ do
+            a_ [href_ (toValue $ "#" <> panelId),H.customAttribute "role" "button",H.dataAttribute "toggle" "collapse",H.dataAttribute "parent" (toValue ("#" <> groupId))] $ do
+              title
+        div_ [id_ (toValue panelId),class_ (toValue (Text.append "panel-collapse collapse" (if i == 1 then " in" else ""))),H.customAttribute "role" "tabpanel",H.customAttribute "aria-labelledby" (toValue headingId)] $ do
+          div_ [class_ "panel-body"] $ do
+            content
+
 container :: Monad m => WidgetT site m a -> WidgetT site m a
 container = div_ [class_ "container"]
 
