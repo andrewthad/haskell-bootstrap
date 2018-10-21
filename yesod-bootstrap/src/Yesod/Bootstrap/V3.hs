@@ -20,6 +20,14 @@ import qualified Text.Blaze.Html5.Attributes as HA
 import qualified Bootstrap.V3 as B
 import qualified Data.Text as Text
 
+panel :: B.Panel (WidgetT site IO ()) -> WidgetT site IO ()
+panel (B.Panel title content ctx) = do
+  div_ [class_ $ toValue $ "panel panel-" <> B.contextClass ctx] $ do
+    div_ [class_  "panel-heading"] $ do
+      h4_ [class_ "panel-title"] title
+    div_ [class_ "panel-body"] $ do
+      content
+
 container :: Monad m => WidgetT site m a -> WidgetT site m a
 container = div_ [class_ "container"]
 
