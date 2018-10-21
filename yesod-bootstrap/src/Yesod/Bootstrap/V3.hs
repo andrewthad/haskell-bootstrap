@@ -66,6 +66,24 @@ anchorButton :: Foldable t => B.Context -> B.Size -> t H.Attribute -> Route site
 anchorButton ctx size attrs = anchor
   (Identity $ (class_ $ toValue $ B.buttonClass ctx size) <> fold attrs)
 
+formGroup :: WidgetT site IO () -> WidgetT site IO ()
+formGroup = div_ [class_ "form-group"]
+
+formGroupFeedback :: B.Context -> WidgetT site IO () -> WidgetT site IO ()
+formGroupFeedback ctx = div_ [class_ (toValue (Text.concat ["form-group has-", B.contextClass ctx, " has-feedback"]))]
+
+inputGroup :: WidgetT site IO () -> WidgetT site IO ()
+inputGroup = div_ [class_ "input-group"]
+
+inputGroupAddon :: WidgetT site IO () -> WidgetT site IO ()
+inputGroupAddon = span_ [class_ "input-group-addon"]
+
+controlLabel :: WidgetT site IO () -> WidgetT site IO ()
+controlLabel = label_ [class_ "control-label"]
+
+helpBlock :: WidgetT site IO () -> WidgetT site IO ()
+helpBlock = div_ [class_ "help-block"]
+
 navbar ::
      B.NavbarTheme
   -> B.NavbarPosition
