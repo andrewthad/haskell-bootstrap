@@ -13,6 +13,7 @@ import Control.Monad
 import Data.Foldable (Foldable(fold))
 import Data.Functor.Identity (Identity(..))
 import Text.Julius (rawJS)
+import Data.Foldable (for_)
 import qualified Data.List as List
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as HA
@@ -197,3 +198,45 @@ $().ready(function(){
     });
 });
 |]
+
+carousel :: B.CarouselIndicators -> B.CarouselControls -> [B.CarouselItem (WidgetT site IO ())] -> WidgetT site IO ()
+carousel indicators controls items = if length items == 0 then mempty else do
+  carouselId <- newIdent
+  div_ [class_ "carousel slide",H.dataAttribute "ride" "carousel",id_ (toValue carouselId)] $ do
+    when (indicators == B.CarouselIndicatorsOn) $ do
+      ol_ [class_ "carousel-indicators"] $ do
+        forM_ (zip [0,1..] itemsActive) $ \(i,(active,_)) -> do
+          li_ [ H.dataAttribute "target" (toValue ("#" <> carouselId))
+              , H.dataAttribute "slide-to" (toValue (Text.pack (show i)))
+              , class_ $ if active then "active" else ""
+              ] mempty
+    div_ [class_ "carousel-inner", H.customAttribute "role" "listbox"] $ do
+      forM_ itemsActive $ \(active,item) -> do
+        div_ [class_ $ toValue $ "item " <> if active then "active" else Text.empty] $ do
+          wrapWithLink (B.carouselItemLink item) mempty
+          img_ [src_ (toValue $ B.carouselItemImage item)]
+          for_ (B.carouselItemCaption item) $ \caption -> do
+            div_ [class_ "carousel-caption"] caption
+    when (controls == B.CarouselControlsOn) $ do
+      a_ [ class_ "left carousel-control"
+         , href_ (toValue $ "#" <> carouselId)
+         , H.customAttribute "role" "button"
+         , H.dataAttribute "slide" "prev"
+         ] $ do
+         glyphicon "chevron-left"
+         span_ [class_ "sr-only"] "Previous"
+      a_ [ class_ "right carousel-control"
+         , href_ (toValue $ "#" <> carouselId)
+         , H.customAttribute "role" "button"
+         , H.dataAttribute "slide" "next"
+         ] $ do
+         glyphicon "chevron-right"
+         span_ [class_ "sr-only"] "Next"
+  where 
+  itemsActive = zip (True : repeat False) items
+  wrapWithLink :: Maybe Text -> WidgetT site IO () -> WidgetT site IO ()
+  wrapWithLink mroute w = (\ww -> maybe w ww mroute) $ \route -> do
+    render <- getUrlRender
+    a_ [href_ (toValue route),style_' "position:absolute;left:0;right:0;width:100%;height:100%;"] w
+
+

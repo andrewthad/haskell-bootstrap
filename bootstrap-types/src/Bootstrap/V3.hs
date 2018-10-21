@@ -13,6 +13,9 @@ module Bootstrap.V3
   , NavbarPosition(..)
   , NavbarItem(..)
   , NavbarDropdownItem(..)
+  , CarouselItem(..)
+  , CarouselIndicators(..)
+  , CarouselControls(..)
   , contextClass
   , sizeClass
   , columnClass
@@ -73,6 +76,20 @@ data Panel c = Panel
   , panelBody :: !c
   , panelContext :: !Context
   }
+
+data CarouselItem c = CarouselItem
+  { carouselItemImage :: Text
+    -- ^ The image should be a hyperlink
+  , carouselItemLink :: Maybe Text
+    -- ^ This should be a hyperlink to the resource
+  , carouselItemCaption :: Maybe c
+  }
+
+data CarouselIndicators = CarouselIndicatorsOn | CarouselIndicatorsOff
+  deriving (Eq)
+data CarouselControls = CarouselControlsOn | CarouselControlsOff
+  deriving (Eq)
+
 
 contextClass :: Context -> Text
 contextClass x = case x of
