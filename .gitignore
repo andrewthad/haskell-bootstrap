@@ -38,3 +38,4 @@ docs/db/unthreat
 
 geolite-csv/data/large
 geolite-lmdb/data/large
+.ghc.environment*

@@ -1,5 +1,5 @@
 name:                bootstrap-types
-version:             0.3
+version:             0.4
 synopsis:            Bootstrap CSS Framework type-safe interface
 license:             MIT
 license-file:        LICENSE
@@ -13,7 +13,7 @@ library
   exposed-modules:
     Bootstrap.V3
   build-depends:
-      base >=4.7 && <5.0
-    , text
+      base >=4.11.1 && <5.0
+    , text >= 1.2
   hs-source-dirs:      src
   default-language:    Haskell2010

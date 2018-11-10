@@ -29,7 +29,6 @@ module Bootstrap.V3
   ) where
 
 import Data.Text (Text)
-import Data.Monoid
 import qualified Data.Text as Text
 
 data NavbarTheme

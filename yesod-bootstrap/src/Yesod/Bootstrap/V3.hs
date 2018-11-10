@@ -21,7 +21,7 @@ import qualified Text.Blaze.Html5.Attributes as HA
 import qualified Bootstrap.V3 as B
 import qualified Data.Text as Text
 
-panel :: B.Panel (WidgetT site IO ()) -> WidgetT site IO ()
+panel :: B.Panel (WidgetFor site ()) -> WidgetFor site ()
 panel (B.Panel title content ctx) = do
   div_ [class_ $ toValue $ "panel panel-" <> B.contextClass ctx] $ do
     div_ [class_  "panel-heading"] $ do
@@ -29,7 +29,7 @@ panel (B.Panel title content ctx) = do
     div_ [class_ "panel-body"] $ do
       content
 
-panelAccordion :: [B.Panel (WidgetT site IO ())] -> WidgetT site IO ()
+panelAccordion :: [B.Panel (WidgetFor site ())] -> WidgetFor site ()
 panelAccordion tcs = do
   groupId <- newIdent
   div_ [class_ "panel-group",id_ (toValue $ groupId),H.customAttribute "role" "tablist"] $ do
@@ -45,85 +45,85 @@ panelAccordion tcs = do
           div_ [class_ "panel-body"] $ do
             content
 
-container :: Monad m => WidgetT site m a -> WidgetT site m a
+container :: WidgetFor site a -> WidgetFor site a
 container = div_ [class_ "container"]
 
-row :: Monad m => WidgetT site m a -> WidgetT site m a
+row :: WidgetFor site a -> WidgetFor site a
 row = div_ [class_ "row"]
 
-column :: Monad m => B.Column -> WidgetT site m a -> WidgetT site m a
+column :: B.Column -> WidgetFor site a -> WidgetFor site a
 column c = div_ [class_ (toValue (B.columnClass c))]
 
-button :: Monad m => B.Context -> B.Size -> WidgetT site m a -> WidgetT site m a
+button :: B.Context -> B.Size -> WidgetFor site a -> WidgetFor site a
 button ctx size = button_
   [ class_ $ toValue $ B.buttonClass ctx size ]
 
-formButtonPost :: B.Context -> B.Size -> Route site -> WidgetT site IO a -> WidgetT site IO a
+formButtonPost :: B.Context -> B.Size -> Route site -> WidgetFor site a -> WidgetFor site a
 formButtonPost = formButton "POST"
 
-formButtonGet :: B.Context -> B.Size -> Route site -> WidgetT site IO a -> WidgetT site IO a
+formButtonGet :: B.Context -> B.Size -> Route site -> WidgetFor site a -> WidgetFor site a
 formButtonGet = formButton "GET"
 
-formButton :: H.AttributeValue -> B.Context -> B.Size -> Route site -> WidgetT site IO a -> WidgetT site IO a
+formButton :: H.AttributeValue -> B.Context -> B.Size -> Route site -> WidgetFor site a -> WidgetFor site a
 formButton method ctx size route inner = do
   urlRender <- getUrlRender
   form_ [method_ method, action_ (toValue (urlRender route))] $ do
     button ctx size inner
 
-checkbox :: WidgetT site IO () -> WidgetT site IO ()
+checkbox :: WidgetFor site () -> WidgetFor site ()
 checkbox = div_ [class_ "checkbox"]
 
-glyphicon :: Monad m => Text -> WidgetT site m ()
+glyphicon :: Text -> WidgetFor site ()
 glyphicon s = span_ [class_ $ toValue $ "glyphicon glyphicon-" <> s] mempty
 
-glyphiconFeedback :: Text -> WidgetT site IO ()
+glyphiconFeedback :: Text -> WidgetFor site ()
 glyphiconFeedback s = span_ [class_ (toValue (Text.concat ["glyphicon glyphicon-", s, " form-control-feedback"]))] mempty
 
-label :: B.Context -> WidgetT site IO () -> WidgetT site IO ()
+label :: B.Context -> WidgetFor site () -> WidgetFor site ()
 label ctx = span_ [class_ $ toValue $ "label label-" <> B.contextClass ctx]
 
-alert :: B.Context -> WidgetT site IO () -> WidgetT site IO ()
+alert :: B.Context -> WidgetFor site () -> WidgetFor site ()
 alert ctx = div_ [class_ $ toValue $ "alert alert-" <> B.contextClass ctx]
 
 alertHtml :: B.Context -> Html -> Html
 alertHtml ctx inner =
   H.div H.! HA.class_ (toValue $ "alert alert-" <> B.contextClass ctx) $ inner
 
-anchor :: Foldable t => t H.Attribute -> Route site -> WidgetT site IO a -> WidgetT site IO a
+anchor :: Foldable t => t H.Attribute -> Route site -> WidgetFor site a -> WidgetFor site a
 anchor attrs route inner = do
   urlRender <- getUrlRender
   a_ (Identity $ (href_ $ toValue $ urlRender route) <> fold attrs) inner
 
-anchorButton :: Foldable t => B.Context -> B.Size -> t H.Attribute -> Route site -> WidgetT site IO () -> WidgetT site IO ()
+anchorButton :: Foldable t => B.Context -> B.Size -> t H.Attribute -> Route site -> WidgetFor site () -> WidgetFor site ()
 anchorButton ctx size attrs = anchor
   (Identity $ (class_ $ toValue $ B.buttonClass ctx size) <> fold attrs)
 
-formGroup :: WidgetT site IO () -> WidgetT site IO ()
+formGroup :: WidgetFor site () -> WidgetFor site ()
 formGroup = div_ [class_ "form-group"]
 
-formGroupFeedback :: B.Context -> WidgetT site IO () -> WidgetT site IO ()
+formGroupFeedback :: B.Context -> WidgetFor site () -> WidgetFor site ()
 formGroupFeedback ctx = div_ [class_ (toValue (Text.concat ["form-group has-", B.contextClass ctx, " has-feedback"]))]
 
-inputGroup :: WidgetT site IO () -> WidgetT site IO ()
+inputGroup :: WidgetFor site () -> WidgetFor site ()
 inputGroup = div_ [class_ "input-group"]
 
-inputGroupAddon :: WidgetT site IO () -> WidgetT site IO ()
+inputGroupAddon :: WidgetFor site () -> WidgetFor site ()
 inputGroupAddon = span_ [class_ "input-group-addon"]
 
-controlLabel :: WidgetT site IO () -> WidgetT site IO ()
+controlLabel :: WidgetFor site () -> WidgetFor site ()
 controlLabel = label_ [class_ "control-label"]
 
-helpBlock :: WidgetT site IO () -> WidgetT site IO ()
+helpBlock :: WidgetFor site () -> WidgetFor site ()
 helpBlock = div_ [class_ "help-block"]
 
 navbar ::
      B.NavbarTheme
   -> B.NavbarPosition
   -> Route site
-  -> WidgetT site IO ()
-  -> [B.NavbarItem (Route site) (WidgetT site IO ())]
-  -> [B.NavbarItem (Route site) (WidgetT site IO ())]
-  -> WidgetT site IO ()
+  -> WidgetFor site ()
+  -> [B.NavbarItem (Route site) (WidgetFor site ())]
+  -> [B.NavbarItem (Route site) (WidgetFor site ())]
+  -> WidgetFor site ()
 navbar theme pos headerRoute headerContent items rightItems = do
   navbarId <- newIdent
   render <- getUrlRender
@@ -155,7 +155,7 @@ navbar theme pos headerRoute headerContent items rightItems = do
     B.NavbarPositionStatic -> "container"
     B.NavbarPositionFixed -> "container"
 
-navbarItem :: B.NavbarItem (Route site) (WidgetT site IO ()) -> WidgetT site IO ()
+navbarItem :: B.NavbarItem (Route site) (WidgetFor site ()) -> WidgetFor site ()
 navbarItem item = do
   render <- getUrlRender
   li_ [] $ case item of
@@ -168,7 +168,7 @@ navbarItem item = do
          ] name
       ul_ [class_ "dropdown-menu"] $ mapM_ navbarDropdownItem children
 
-navbarDropdownItem :: B.NavbarDropdownItem (Route site) (WidgetT site IO ()) -> WidgetT site IO ()
+navbarDropdownItem :: B.NavbarDropdownItem (Route site) (WidgetFor site ()) -> WidgetFor site ()
 navbarDropdownItem item = do
   render <- getUrlRender
   case item of
@@ -176,7 +176,7 @@ navbarDropdownItem item = do
     B.NavbarDropdownItemHeader name -> li_ [class_ "dropdown-header"] name
     B.NavbarDropdownItemSeparator -> li_ [class_ "separator", H.customAttribute "role" "divider"] mempty
 
-breadcrumbsList :: [(Route site,WidgetT site IO ())] -> WidgetT site IO ()
+breadcrumbsList :: [(Route site,WidgetFor site ())] -> WidgetFor site ()
 breadcrumbsList allCrumbs = case List.reverse allCrumbs of
   (_,lastCrumbWidget):crumbs -> ol_ [class_ "breadcrumb"] $ do
     forM_ (List.reverse crumbs) $ \(route,name) -> li_ [] $ anchor [] route name
@@ -184,10 +184,10 @@ breadcrumbsList allCrumbs = case List.reverse allCrumbs of
   [] -> mempty
 
 popoverClickable ::
-     WidgetT site IO () -- ^ Title
-  -> WidgetT site IO () -- ^ Popup
-  -> WidgetT site IO () -- ^ Inner Content
-  -> WidgetT site IO ()
+     WidgetFor site () -- ^ Title
+  -> WidgetFor site () -- ^ Popup
+  -> WidgetFor site () -- ^ Inner Content
+  -> WidgetFor site ()
 popoverClickable title popup inner = do
   containerId <- newIdent
   innerId <- newIdent
@@ -224,7 +224,7 @@ $().ready(function(){
 });
 |]
 
-carousel :: B.CarouselIndicators -> B.CarouselControls -> [B.CarouselItem (WidgetT site IO ())] -> WidgetT site IO ()
+carousel :: B.CarouselIndicators -> B.CarouselControls -> [B.CarouselItem (WidgetFor site ())] -> WidgetFor site ()
 carousel indicators controls items = if length items == 0 then mempty else do
   carouselId <- newIdent
   div_ [class_ "carousel slide",H.dataAttribute "ride" "carousel",id_ (toValue carouselId)] $ do
@@ -259,21 +259,21 @@ carousel indicators controls items = if length items == 0 then mempty else do
          span_ [class_ "sr-only"] "Next"
   where 
   itemsActive = zip (True : repeat False) items
-  wrapWithLink :: Maybe Text -> WidgetT site IO () -> WidgetT site IO ()
+  wrapWithLink :: Maybe Text -> WidgetFor site () -> WidgetFor site ()
   wrapWithLink mroute w = (\ww -> maybe w ww mroute) $ \route -> do
     render <- getUrlRender
     a_ [href_ (toValue route),style_' "position:absolute;left:0;right:0;width:100%;height:100%;"] w
 
-badge :: WidgetT site IO () -> WidgetT site IO ()
+badge :: WidgetFor site () -> WidgetFor site ()
 badge = span_ [class_ "badge"]
 
-listGroupLinked :: [(Route site,WidgetT site IO ())] -> WidgetT site IO ()
+listGroupLinked :: [(Route site,WidgetFor site ())] -> WidgetFor site ()
 listGroupLinked items = do
   render <- getUrlRender
   div_ [class_ "list-group"] $ forM_ items $ \(route,name) -> do
     a_ [href_ (toValue (render route)),class_ "list-group-item"] name
 
-togglableTabs :: B.ToggleStyle -> [B.ToggleTab (WidgetT site IO ())] -> WidgetT site IO ()
+togglableTabs :: B.ToggleStyle -> [B.ToggleTab (WidgetFor site ())] -> WidgetFor site ()
 togglableTabs s tabs = do
   (nav,bodies) <- execWriterT $ forM_ (zip [1..] tabs) $ \(i,tab) -> case tab of
     B.ToggleSection title body -> do -- WriterT (Widget,Widget) over a WidgetT
